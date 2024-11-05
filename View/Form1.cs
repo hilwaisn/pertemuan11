@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ namespace pertemuan11
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            Form2 add= new Form2();
+            Form2 add = new Form2();
             add.Show();
             this.Hide();
         }
@@ -50,7 +51,7 @@ namespace pertemuan11
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             Form3 update = new Form3();
-            update.Show(); 
+            update.Show();
             this.Hide();
 
             update.textBox1.Text = this.dataGridView1.CurrentRow.Cells[0].Value.ToString();
@@ -105,6 +106,41 @@ namespace pertemuan11
             txtDelete2.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
             txtDelete3.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
             txtDelete4.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
+        }
+
+        private void printDocumentBarang_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            Bitmap btm = new Bitmap(this.dataGridView1.Width, this.dataGridView1.Height);
+            dataGridView1.DrawToBitmap(btm, new Rectangle(0, 0, this.dataGridView1.Width, this.dataGridView1.Height));
+            e.Graphics.DrawImage(btm, 45, 170);
+            e.Graphics.DrawString(lblBarang.Text, new Font("Calibri", 23, FontStyle.Bold), Brushes.Black, new Point
+                (185, 100));
+        }
+
+        private void btn_Search_Click(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = barangController.searchBarang(txtForSearch.Text);
+            dataGridView1.RowTemplate.Height = 20;
+        }
+
+        private void btn_Print_Click(object sender, EventArgs e)
+        {
+            printDialogBarang.Document = printDocumentBarang;
+            printDialogBarang.ShowDialog();
+        }
+
+        private void guna2ToggleSwitch1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (guna2ToggleSwitch1.Checked == true)
+            {
+                this.BackColor = Color.FromArgb(34, 36, 49);
+                lblBarang.ForeColor = Color.White;
+            }
+            else
+            {
+                this.BackColor = Color.White;
+                lblBarang.ForeColor = Color.Black;
+            }
         }
     }
 }

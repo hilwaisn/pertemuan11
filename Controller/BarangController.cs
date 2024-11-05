@@ -1,8 +1,10 @@
 ﻿using MySqlConnector;
+using pertemuan11.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,6 +13,7 @@ namespace pertemuan11.Controller
 {
     internal class BarangController : Model.Connection
     {
+        private Connection conn = new Connection();
         /*public DataTable tampilBarang()
         {
             DataTable data = new DataTable();
@@ -90,6 +93,23 @@ namespace pertemuan11.Controller
                 MessageBox.Show(ex.Message);
             }
             return data;
+        }
+        public DataTable searchBarang(string search)
+        {
+            DataTable table = new DataTable();
+            try
+            {
+                MySqlCommand command = new MySqlCommand(
+                    "SELECT * FROM barang WHERE CONCAT(id_Barang, nama_barang,"+
+                    "harga_barang, stok)LIKE '%" + search + "%'", conn.GetConn());
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                adapter.Fill(table);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return table;
         }
     }
 }
